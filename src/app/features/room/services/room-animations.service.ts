@@ -190,24 +190,24 @@ export class RoomAnimationsService {
    */
   animateOptionsReorder(): void {
     const optionCards = document.querySelectorAll('[data-option-id]');
-    
+
     if (optionCards.length === 0) return;
 
     // Use GSAP's Flip plugin alternative - capture positions before and animate after
     const positions = new Map<Element, { top: number; left: number }>();
-    
+
     // Capture current positions
-    optionCards.forEach(card => {
+    optionCards.forEach((card) => {
       const rect = card.getBoundingClientRect();
       positions.set(card, { top: rect.top, left: rect.left });
     });
 
     // After DOM updates (next frame), animate from old to new positions
     requestAnimationFrame(() => {
-      optionCards.forEach(card => {
+      optionCards.forEach((card) => {
         const oldPos = positions.get(card);
         if (!oldPos) return;
-        
+
         const newRect = card.getBoundingClientRect();
         const deltaY = oldPos.top - newRect.top;
         const deltaX = oldPos.left - newRect.left;

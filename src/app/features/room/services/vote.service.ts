@@ -26,11 +26,11 @@ export class VoteService {
     try {
       await runTransaction(db, async (transaction) => {
         // ===== PHASE 1: ALL READS FIRST =====
-        
+
         // Check room status first
         const roomRef = doc(db, this.ROOMS_COLLECTION, roomId);
         const roomDoc = await transaction.get(roomRef);
-        
+
         if (roomDoc.exists()) {
           const roomData = roomDoc.data() as Room;
           if (roomData.status === RoomStatus.Ended) {
@@ -161,7 +161,7 @@ export class VoteService {
       // Check room status before attempting to remove vote
       const roomRef = doc(db, this.ROOMS_COLLECTION, roomId);
       const roomDoc = await getDoc(roomRef);
-      
+
       if (roomDoc.exists()) {
         const roomData = roomDoc.data() as Room;
         if (roomData.status === RoomStatus.Ended) {

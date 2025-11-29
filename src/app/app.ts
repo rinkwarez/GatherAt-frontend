@@ -55,7 +55,7 @@ export class App {
                 resolve(roomData);
               });
             });
-            
+
             // Only remove vote and leave if voting hasn't ended
             if (roomData && (roomData as any).status !== RoomStatus.Ended) {
               // Remove vote first

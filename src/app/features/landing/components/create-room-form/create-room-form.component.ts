@@ -106,7 +106,7 @@ export class CreateRoomFormComponent {
       // If not logged in, we'll create a temporary user
       // They'll be prompted to set their name when entering the room
       let userId = this.userSessionService.getUserId();
-      
+
       // If user doesn't exist in session yet, just get/generate the userId
       // They will be prompted for name when they enter the room
       if (!userId) {

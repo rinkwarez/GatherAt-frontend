@@ -84,7 +84,7 @@ export class RoomService {
     const { doc, updateDoc, arrayUnion, getDoc } = await import('firebase/firestore');
 
     const roomRef = doc(db, this.ROOMS_COLLECTION, roomId);
-    
+
     // Check if room voting has ended
     const roomDoc = await getDoc(roomRef);
     if (roomDoc.exists()) {
@@ -94,7 +94,7 @@ export class RoomService {
         return;
       }
     }
-    
+
     await updateDoc(roomRef, {
       participants: arrayUnion(displayName),
     });
@@ -110,7 +110,7 @@ export class RoomService {
     const { doc, updateDoc, arrayRemove, getDoc } = await import('firebase/firestore');
 
     const roomRef = doc(db, this.ROOMS_COLLECTION, roomId);
-    
+
     // Check if room voting has ended
     const roomDoc = await getDoc(roomRef);
     if (roomDoc.exists()) {
@@ -120,7 +120,7 @@ export class RoomService {
         return;
       }
     }
-    
+
     await updateDoc(roomRef, {
       participants: arrayRemove(displayName),
     });

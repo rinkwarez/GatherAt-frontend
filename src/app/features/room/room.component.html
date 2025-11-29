@@ -38,9 +38,13 @@
         ▶️ Resume Voting
       </button>
       } @if (room()!.status === RoomStatus.InProgress) {
-      <button class="btn-control btn-pause" (click)="updateStatus(RoomStatus.Paused)">⏸️ Pause Voting</button>
+      <button class="btn-control btn-pause" (click)="updateStatus(RoomStatus.Paused)">
+        ⏸️ Pause Voting
+      </button>
       } @if (room()!.status !== RoomStatus.Ended) {
-      <button class="btn-control btn-end" (click)="updateStatus(RoomStatus.Ended)">🏁 End Voting</button>
+      <button class="btn-control btn-end" (click)="updateStatus(RoomStatus.Ended)">
+        🏁 End Voting
+      </button>
       }
     </div>
   </div>

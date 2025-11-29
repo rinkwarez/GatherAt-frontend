@@ -18,7 +18,13 @@ import { AddOptionFormComponent } from './components/add-option-form/add-option-
 @Component({
   selector: 'app-room',
   standalone: true,
-  imports: [CommonModule, RoomHeaderComponent, OptionCardComponent, VoterNamePromptComponent, AddOptionFormComponent],
+  imports: [
+    CommonModule,
+    RoomHeaderComponent,
+    OptionCardComponent,
+    VoterNamePromptComponent,
+    AddOptionFormComponent,
+  ],
   templateUrl: './room.component.html',
   styleUrl: './room.component.css',
 })
@@ -33,7 +39,7 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
   userVote = signal<string | null>(null); // The optionId the user voted for
   isVoting = signal(false);
   isCreator = signal(false); // Whether current user is the room creator
-  
+
   // Expose enum to template
   readonly RoomStatus = RoomStatus;
 
@@ -140,7 +146,7 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
         if (room) {
           this.room.set(room);
           this.isLoading.set(false);
-          
+
           // Check if current user is the creator
           const userId = this.userSessionService.getUserId();
           this.isCreator.set(room.createdBy === userId);
@@ -166,14 +172,15 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
       next: (options) => {
         console.log('Received options from Firestore:', options);
         const wasEmpty = this.options().length === 0;
-        
+
         // Check if order changed (for animation)
-        const currentIds = this.options().map(opt => opt.id);
-        const newIds = options.map(opt => opt.id);
-        const orderChanged = currentIds.length > 0 && 
-                             currentIds.length === newIds.length &&
-                             currentIds.some((id, idx) => id !== newIds[idx]);
-        
+        const currentIds = this.options().map((opt) => opt.id);
+        const newIds = options.map((opt) => opt.id);
+        const orderChanged =
+          currentIds.length > 0 &&
+          currentIds.length === newIds.length &&
+          currentIds.some((id, idx) => id !== newIds[idx]);
+
         // Update options
         this.options.set(options);
 
@@ -192,14 +199,16 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
         } else if (this.animationsTriggered) {
           // Detect and animate new options appearing in real-time
           const currentOptionIds = new Set(currentIds);
-          const newOptionIds = newIds.filter(id => id && !currentOptionIds.has(id));
-          
+          const newOptionIds = newIds.filter((id) => id && !currentOptionIds.has(id));
+
           if (newOptionIds.length > 0) {
             console.log('New options detected:', newOptionIds);
             // Wait for DOM to update, then animate the new option
             setTimeout(() => {
-              newOptionIds.forEach(optionId => {
-                const element = document.querySelector(`[data-option-id="${optionId}"]`) as HTMLElement;
+              newOptionIds.forEach((optionId) => {
+                const element = document.querySelector(
+                  `[data-option-id="${optionId}"]`
+                ) as HTMLElement;
                 if (element) {
                   console.log('Animating new option:', optionId);
                   this.animationsService.animateNewOption(element);
@@ -207,9 +216,9 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
               });
             }, 50);
           }
-          
+
           // Update the previous IDs set
-          this.previousOptionIds = new Set(newIds.filter(id => id) as string[]);
+          this.previousOptionIds = new Set(newIds.filter((id) => id) as string[]);
         }
       },
       error: (err) => {
@@ -261,7 +270,7 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
     const currentRoom = this.room();
     // If status is undefined (old rooms), allow voting. Otherwise check if InProgress
     const votingAllowed = !currentRoom?.status || currentRoom.status === RoomStatus.InProgress;
-    
+
     if (!votingAllowed) {
       console.log('Voting is not allowed - status:', currentRoom?.status);
       return;

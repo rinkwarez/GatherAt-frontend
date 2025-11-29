@@ -3,7 +3,7 @@ import { Timestamp } from 'firebase/firestore';
 export enum RoomStatus {
   Paused = 'Paused',
   InProgress = 'InProgress',
-  Ended = 'Ended'
+  Ended = 'Ended',
 }
 
 export interface Room {
