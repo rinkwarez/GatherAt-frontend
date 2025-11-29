@@ -1,0 +1,104 @@
+/* Room Header Container */
+.room-header {
+  width: 100%;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, #8b7fff 0%, #ff6b9d 100%);
+  border-radius: 0 0 32px 32px;
+  box-shadow: 0 4px 20px rgba(139, 127, 255, 0.2);
+  margin-bottom: 2rem;
+}
+
+.header-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+/* Home Button */
+.btn-home {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.btn-home:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-home:active {
+  transform: translateY(0);
+}
+
+.room-question {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.room-id-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.room-id {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.25rem 0.75rem;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .room-header {
+    padding: 1.5rem 1rem;
+  }
+
+  .btn-home {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .room-question {
+    font-size: 1.5rem;
+  }
+
+  .room-id-label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .room-header {
+    padding: 1rem;
+  }
+
+  .btn-home {
+    position: static;
+    margin-bottom: 1rem;
+  }
+
+  .room-question {
+    font-size: 1.25rem;
+  }
+}

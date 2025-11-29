@@ -1,0 +1,111 @@
+<div class="room-container">
+  <!-- Voter Name Prompt Modal -->
+  @if (showNamePrompt()) {
+  <app-voter-name-prompt (nameSubmitted)="onNameSubmitted($event)"> </app-voter-name-prompt>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+  <div class="loading-container">
+    <div class="spinner-large"></div>
+    <p class="loading-text">Loading room...</p>
+  </div>
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+  <div class="error-container">
+    <h2>⚠️ Oops!</h2>
+    <p class="error-text">{{ error() }}</p>
+    <a href="/" class="btn-home">Go to Home</a>
+  </div>
+  }
+
+  <!-- Room Content -->
+  @else if (room()) {
+  <!-- Room Header -->
+  <app-room-header [question]="room()!.question" [roomId]="roomId()"> </app-room-header>
+
+  <!-- Status Controls (Only for Creator) -->
+  @if (isCreator() && room()!.status) {
+  <div class="status-controls">
+    <div class="status-badge status-{{ room()!.status!.toLowerCase() }}">
+      Status: {{ room()!.status }}
+    </div>
+    <div class="control-buttons">
+      @if (room()!.status === RoomStatus.Paused) {
+      <button class="btn-control btn-resume" (click)="updateStatus(RoomStatus.InProgress)">
+        ▶️ Resume Voting
+      </button>
+      } @if (room()!.status === RoomStatus.InProgress) {
+      <button class="btn-control btn-pause" (click)="updateStatus(RoomStatus.Paused)">⏸️ Pause Voting</button>
+      } @if (room()!.status !== RoomStatus.Ended) {
+      <button class="btn-control btn-end" (click)="updateStatus(RoomStatus.Ended)">🏁 End Voting</button>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Status Message for Non-Creators -->
+  @if (!isCreator() && room()!.status && room()!.status !== RoomStatus.InProgress) {
+  <div class="status-message status-message-{{ room()!.status!.toLowerCase() }}">
+    @if (room()!.status === RoomStatus.Paused) {
+    <span class="status-icon">⏸️</span>
+    <span>Voting is currently paused. Please wait for the host to resume.</span>
+    } @else if (room()!.status === RoomStatus.Ended) {
+    <span class="status-icon">🏁</span>
+    <span>Voting has ended. Results are final.</span>
+    }
+  </div>
+  }
+
+  <!-- Main Content Area with Sidebar -->
+  <div class="room-layout">
+    <!-- Participants Sidebar -->
+    <aside class="voters-sidebar">
+      <div class="voters-card">
+        <h3 class="voters-title">
+          <span class="voters-icon">👥</span>
+          Participants ({{ room()!.participants?.length || 0 }})
+        </h3>
+        <div class="voters-list">
+          @if (room()!.participants && room()!.participants.length > 0) { @for (participant of
+          room()!.participants; track $index) {
+          <div class="voter-item">
+            <span class="voter-avatar">{{ participant.charAt(0).toUpperCase() }}</span>
+            <span class="voter-name">{{ participant }}</span>
+          </div>
+          } } @else {
+          <p class="no-voters">No participants yet</p>
+          }
+        </div>
+      </div>
+    </aside>
+
+    <!-- Options Section -->
+    <div class="room-content">
+      <!-- Add Option Form -->
+      <app-add-option-form [roomId]="roomId()"></app-add-option-form>
+
+      @if (options().length > 0) {
+      <div class="options-list">
+        @for (option of options(); track trackByOptionId($index, option)) {
+        <app-option-card
+          [option]="option"
+          [index]="$index"
+          [userVote]="userVote()"
+          [isVoting]="isVoting()"
+          (vote)="onVote($event)"
+        >
+        </app-option-card>
+        }
+      </div>
+      } @else {
+      <div class="no-options">
+        <p>No options yet. Add some to get started!</p>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>

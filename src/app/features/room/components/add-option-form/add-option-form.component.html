@@ -1,0 +1,29 @@
+<div class="add-option-form">
+  <form (ngSubmit)="onSubmit()" class="form-container">
+    <div class="input-wrapper">
+      <input
+        type="text"
+        class="option-input"
+        placeholder="Add a new option..."
+        [(ngModel)]="optionLabel"
+        name="optionLabel"
+        [disabled]="isSubmitting()"
+        maxlength="100"
+      />
+      <button
+        type="submit"
+        class="btn-add"
+        [disabled]="isSubmitting() || !optionLabel().trim()"
+        [class.submitting]="isSubmitting()"
+      >
+        @if (isSubmitting()) {
+        <span class="spinner"></span>
+        } @else { + }
+      </button>
+    </div>
+
+    @if (error()) {
+    <p class="error-message">{{ error() }}</p>
+    }
+  </form>
+</div>

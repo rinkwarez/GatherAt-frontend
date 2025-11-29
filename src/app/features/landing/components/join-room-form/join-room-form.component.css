@@ -1,0 +1,131 @@
+/* Join Room Form Container */
+.join-room-form {
+  width: 100%;
+}
+
+.form-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Input Group */
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.form-input {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  font-size: 0.95rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  color: var(--color-text);
+  transition: all 0.2s ease;
+}
+
+.form-input:hover {
+  border-color: #cbd5e0;
+}
+
+.form-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(80, 227, 194, 0.1);
+}
+
+.form-input::placeholder {
+  color: var(--color-text-lighter);
+}
+
+.form-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #f7fafc;
+}
+
+/* Join Button */
+.btn-join {
+  padding: 0.875rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--color-accent) 0%, #4fc3f7 100%);
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(80, 227, 194, 0.3), 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+.btn-join:hover:not(:disabled) {
+  box-shadow: 0 6px 16px rgba(80, 227, 194, 0.4), 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.btn-join:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-join:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error Message */
+.error-message {
+  padding: 0.75rem 1rem;
+  background: #fff5f5;
+  color: #c53030;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-left: 3px solid #fc8181;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .input-group {
+    flex-direction: column;
+  }
+
+  .btn-join {
+    width: 100%;
+  }
+
+  .form-title {
+    font-size: 1rem;
+  }
+}

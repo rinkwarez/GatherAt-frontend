@@ -1,0 +1,36 @@
+<div class="prompt-overlay">
+  <div class="prompt-modal">
+    <div class="modal-content">
+      <!-- Emoji Header -->
+      <div class="modal-header">
+        <span class="emoji">👋</span>
+        <h2 class="modal-title">Welcome to the GatherAt!</h2>
+        <p class="modal-subtitle">What should we call you?</p>
+      </div>
+
+      <!-- Form -->
+      <form (ngSubmit)="onSubmit()" class="name-form">
+        <input
+          type="text"
+          class="name-input"
+          placeholder="Enter your name..."
+          [(ngModel)]="displayName"
+          name="displayName"
+          maxlength="20"
+          autocomplete="off"
+        />
+
+        <!-- Error Message -->
+        @if (error()) {
+        <div class="error-message">{{ error() }}</div>
+        }
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit">Let's Go! 🎉</button>
+      </form>
+
+      <!-- Helper Text -->
+      <p class="helper-text">This is just a friendly name for voting. No sign-up required!</p>
+    </div>
+  </div>
+</div>

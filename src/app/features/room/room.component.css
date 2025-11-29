@@ -1,0 +1,357 @@
+/* Room Container */
+.room-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fafbff 0%, #f0f4ff 100%);
+}
+
+/* Status Controls (Creator Only) */
+.status-controls {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.5rem;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.status-inprogress {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-paused {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.status-ended {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn-control {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-resume {
+  background: #28a745;
+  color: white;
+}
+
+.btn-resume:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+.btn-pause {
+  background: #ffc107;
+  color: #333;
+}
+
+.btn-pause:hover {
+  background: #e0a800;
+  transform: translateY(-1px);
+}
+
+.btn-end {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-end:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Status Message (Non-Creator) */
+.status-message {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.status-message-paused {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.status-message-ended {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.status-icon {
+  font-size: 1.25rem;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 1.5rem;
+}
+
+.spinner-large {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(139, 127, 255, 0.2);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--color-text-light);
+}
+
+/* Error State */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+  gap: 1rem;
+}
+
+.error-container h2 {
+  font-size: 2rem;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.error-text {
+  font-size: 1.125rem;
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+.btn-home {
+  margin-top: 1rem;
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border: none;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(139, 127, 255, 0.3), 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.btn-home:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(139, 127, 255, 0.4), 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Room Content */
+.room-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Voters Sidebar */
+.voters-sidebar {
+  position: sticky;
+  top: 1.5rem;
+}
+
+.voters-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.voters-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.voters-icon {
+  font-size: 1.25rem;
+}
+
+.voters-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.voter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem;
+  background: #f7fafc;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.voter-item:hover {
+  background: #edf2f7;
+}
+
+.voter-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.voter-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.no-voters {
+  text-align: center;
+  color: var(--color-text-lighter);
+  font-size: 0.9rem;
+  margin: 1rem 0;
+}
+
+/* Main Room Content */
+.room-content {
+  min-width: 0;
+}
+
+/* Remove old room-content styles */
+
+/* Options List */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Smooth list item reordering */
+.options-list > * {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* No Options State */
+.no-options {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.no-options p {
+  color: var(--color-text-lighter);
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .status-controls {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .control-buttons {
+    justify-content: center;
+  }
+
+  .status-message {
+    padding: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .room-layout {
+    grid-template-columns: 1fr;
+    padding: 0 1rem 2rem;
+    gap: 1.5rem;
+  }
+
+  .voters-sidebar {
+    position: relative;
+    top: 0;
+  }
+
+  .voters-card {
+    padding: 1.25rem;
+  }
+
+  .voters-list {
+    max-height: 200px;
+  }
+}

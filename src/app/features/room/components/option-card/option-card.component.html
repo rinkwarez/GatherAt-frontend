@@ -1,0 +1,42 @@
+<div
+  class="option-card"
+  [class.winner]="option.isWinner"
+  [class.user-vote]="isUserVote"
+  [class.voting]="isVoting"
+  [attr.data-option-index]="index"
+  [attr.data-option-id]="option.id"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+  (click)="onClick()"
+>
+  <div class="option-content">
+    <!-- Winner Badge -->
+    @if (option.isWinner && option.voteCount > 0) {
+    <div class="winner-badge">👑</div>
+    }
+
+    <!-- User Vote Indicator -->
+    @if (isUserVote) {
+    <div class="user-vote-badge">✓</div>
+    }
+
+    <!-- Option Label -->
+    <div class="option-label">{{ option.label }}</div>
+
+    <!-- Vote Count -->
+    <div class="vote-count">
+      <span class="count">{{ option.voteCount }}</span>
+      <span class="count-label">{{ option.voteCount === 1 ? 'vote' : 'votes' }}</span>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar-container">
+    <div
+      class="progress-bar"
+      [style.width.%]="option.percentage"
+      [attr.data-percentage]="option.percentage"
+    ></div>
+    <span class="percentage-label">{{ option.percentage.toFixed(0) }}%</span>
+  </div>
+</div>

@@ -1,0 +1,217 @@
+/* Option Card Container */
+.option-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 2px solid transparent;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  /* Smooth transition for position changes when sorting */
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Winner Styling */
+.option-card.winner {
+  border-color: var(--color-warning);
+  background: linear-gradient(135deg, #fffef5 0%, white 100%);
+  box-shadow: 0 4px 16px rgba(255, 217, 61, 0.3), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.option-card.winner:hover {
+  box-shadow: 0 8px 32px rgba(255, 217, 61, 0.4), 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Winner Badge */
+.winner-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  animation: bounce 0.6s ease-in-out;
+}
+
+/* User Vote Badge */
+.user-vote-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 1.25rem;
+  background: var(--color-primary);
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(139, 127, 255, 0.4);
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* User Vote Styling */
+.option-card.user-vote {
+  border-color: var(--color-primary);
+  background: linear-gradient(135deg, #f8f7ff 0%, white 100%);
+  box-shadow: 0 4px 16px rgba(139, 127, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.option-card.user-vote:hover {
+  box-shadow: 0 8px 32px rgba(139, 127, 255, 0.3), 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Voting State (disabled during vote processing) */
+.option-card.voting {
+  opacity: 0.6;
+  cursor: wait;
+  pointer-events: none;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Option Content */
+.option-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  padding-right: 3rem; /* Space for winner badge */
+  padding-left: 3rem; /* Space for user vote badge */
+}
+
+.option-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  flex: 1;
+  line-height: 1.4;
+  min-width: 0; /* Allow text to wrap/truncate properly */
+  word-wrap: break-word;
+}
+
+/* Vote Count */
+.vote-count {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125rem;
+}
+
+.count {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.count-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-lighter);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Progress Bar */
+.progress-bar-container {
+  position: relative;
+  height: 12px;
+  background: #f0f4ff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border-radius: 10px;
+  /* Remove transition - GSAP handles width animation */
+  position: relative;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.percentage-label {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-light);
+}
+
+/* Winner Progress Bar */
+.option-card.winner .progress-bar {
+  background: linear-gradient(90deg, var(--color-warning) 0%, #ffb347 100%);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .option-card {
+    padding: 1.25rem;
+  }
+
+  .option-label {
+    font-size: 1rem;
+  }
+
+  .count {
+    font-size: 1.25rem;
+  }
+
+  .winner-badge {
+    font-size: 1.25rem;
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}

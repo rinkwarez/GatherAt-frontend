@@ -1,0 +1,39 @@
+/* Sticky Logout Button */
+.logout-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 0.875rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  background: #e53e3e;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logout-button:hover {
+  background: #c53030;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(229, 62, 62, 0.4);
+}
+
+.logout-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .logout-button {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+  }
+}
