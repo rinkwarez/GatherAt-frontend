@@ -1,7 +1,22 @@
 <router-outlet />
 @if (isLoggedIn()) {
-<button class="logout-button" (click)="logout()" title="Clear your name and vote">
-  <span>🚪</span>
-  <span>Logout</span>
-</button>
+<!-- FAB Menu -->
+<div class="fab-container">
+  @if (fabMenuOpen()) {
+  <div class="fab-backdrop" (click)="closeFabMenu()"></div>
+  <div class="fab-menu">
+    <button class="fab-menu-item" (click)="logout()" title="Clear your name and vote">
+      <span class="fab-icon">🚪</span>
+      <span>Logout</span>
+    </button>
+  </div>
+  }
+  <button class="fab-button" (click)="toggleFabMenu()" [class.active]="fabMenuOpen()" title="Menu">
+    @if (fabMenuOpen()) {
+    <span class="fab-icon-main">✕</span>
+    } @else {
+    <span class="fab-icon-main">⋮ </span>
+    }
+  </button>
+</div>
 }

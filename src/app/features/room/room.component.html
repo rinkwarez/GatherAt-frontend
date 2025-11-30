@@ -67,12 +67,13 @@
   <div class="room-layout">
     <!-- Participants Sidebar -->
     <aside class="voters-sidebar">
-      <div class="voters-card">
-        <h3 class="voters-title">
+      <div class="voters-card" [class.mobile-collapsed]="!participantsExpanded()">
+        <h3 class="voters-title" (click)="toggleParticipants()">
           <span class="voters-icon">👥</span>
-          Participants ({{ room()!.participants?.length || 0 }})
+          <span>Participants ({{ room()!.participants?.length || 0 }})</span>
+          <span class="accordion-icon">{{ participantsExpanded() ? '▼' : '▶' }}</span>
         </h3>
-        <div class="voters-list">
+        <div class="voters-list" [class.expanded]="participantsExpanded()">
           @if (room()!.participants && room()!.participants.length > 0) { @for (participant of
           room()!.participants; track $index) {
           <div class="voter-item">

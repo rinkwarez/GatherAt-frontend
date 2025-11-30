@@ -15,6 +15,7 @@
         class="btn-add"
         [disabled]="isSubmitting() || !optionLabel().trim()"
         [class.submitting]="isSubmitting()"
+        tabindex="-1"
       >
         @if (isSubmitting()) {
         <span class="spinner"></span>

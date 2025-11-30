@@ -14,6 +14,7 @@ import { RoomStatus } from './models/room.model';
 export class App {
   protected readonly title = signal('gatherAt');
   protected readonly isLoggedIn = signal(false);
+  protected readonly fabMenuOpen = signal(false);
 
   constructor(
     private userSessionService: UserSessionService,
@@ -78,5 +79,19 @@ export class App {
       await this.userSessionService.clearSession();
       window.location.reload();
     }
+  }
+
+  /**
+   * Toggle FAB menu
+   */
+  toggleFabMenu(): void {
+    this.fabMenuOpen.update((open) => !open);
+  }
+
+  /**
+   * Close FAB menu
+   */
+  closeFabMenu(): void {
+    this.fabMenuOpen.set(false);
   }
 }

@@ -233,6 +233,13 @@
   font-size: 1.25rem;
 }
 
+.accordion-icon {
+  margin-left: auto;
+  font-size: 0.875rem;
+  display: none;
+  transition: transform 0.3s ease;
+}
+
 .voters-list {
   display: flex;
   flex-direction: column;
@@ -345,13 +352,37 @@
   .voters-sidebar {
     position: relative;
     top: 0;
+    order: -1;
   }
 
   .voters-card {
     padding: 1.25rem;
   }
 
+  .voters-title {
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 0;
+  }
+
+  .accordion-icon {
+    display: block;
+  }
+
   .voters-list {
-    max-height: 200px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, margin-top 0.3s ease;
+    margin-top: 0;
+  }
+
+  .voters-list.expanded {
+    max-height: 400px;
+    margin-top: 1rem;
+    overflow-y: auto;
+  }
+
+  .mobile-collapsed .voters-list:not(.expanded) {
+    display: none;
   }
 }

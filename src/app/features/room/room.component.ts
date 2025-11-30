@@ -39,10 +39,10 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
   userVote = signal<string | null>(null); // The optionId the user voted for
   isVoting = signal(false);
   isCreator = signal(false); // Whether current user is the room creator
+  participantsExpanded = signal(false); // For mobile accordion
 
   // Expose enum to template
   readonly RoomStatus = RoomStatus;
-
   private roomSubscription?: Subscription;
   private optionsSubscription?: Subscription;
   private voteSubscription?: Subscription;
@@ -319,6 +319,13 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   trackByOptionId(index: number, option: OptionWithPercentage): string {
     return option.id || index.toString();
+  }
+
+  /**
+   * Toggle participants accordion (mobile)
+   */
+  toggleParticipants(): void {
+    this.participantsExpanded.update((expanded) => !expanded);
   }
 
   /**

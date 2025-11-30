@@ -1,39 +1,129 @@
-/* Sticky Logout Button */
-.logout-button {
+/* Floating Action Button (FAB) */
+.fab-container {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  padding: 0.875rem 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: white;
-  background: #e53e3e;
+  z-index: 1000;
+}
+
+.fab-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 998;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fab-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
   border: none;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+  box-shadow: 0 4px 12px rgba(139, 127, 255, 0.4);
   cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 50;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  position: relative;
+  z-index: 999;
 }
 
-.logout-button:hover {
-  background: #c53030;
+.fab-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(229, 62, 62, 0.4);
+  box-shadow: 0 6px 16px rgba(139, 127, 255, 0.5);
 }
 
-.logout-button:active {
-  transform: translateY(0);
+.fab-button.active {
+  transform: rotate(90deg);
+  background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+}
+
+.fab-icon-main {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  line-height: 1;
+}
+
+.fab-menu {
+  position: absolute;
+  bottom: 72px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  min-width: 160px;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fab-menu-item {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: left;
+}
+
+.fab-menu-item:hover {
+  background: #f7fafc;
+}
+
+.fab-menu-item:active {
+  background: #edf2f7;
+}
+
+.fab-icon {
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 @media (max-width: 768px) {
-  .logout-button {
+  .fab-container {
     bottom: 1.5rem;
     right: 1.5rem;
-    padding: 0.75rem 1.25rem;
-    font-size: 0.85rem;
+  }
+
+  .fab-button {
+    width: 52px;
+    height: 52px;
+  }
+
+  .fab-menu {
+    bottom: 68px;
   }
 }
