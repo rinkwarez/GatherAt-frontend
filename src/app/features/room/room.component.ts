@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy, signal, AfterViewInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { RoomService } from './services/room.service';
 import { OptionService } from './services/option.service';
 import { VoteService } from './services/vote.service';
 import { RoomAnimationsService } from './services/room-animations.service';
-import { UserSessionService } from '../../core/services/user-session.service';
+import { UserSessionService } from '../../shared/services/user-session.service';
+import { ToastService } from '../../shared/services/toast.service';
+import { ConfirmationService } from '../../shared/services/confirmation.service';
 import { Room, RoomStatus } from '../../models/room.model';
 import { OptionWithPercentage } from '../../models/option.model';
 import { Vote } from '../../models/vote.model';
@@ -52,11 +54,14 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private roomService: RoomService,
     private optionService: OptionService,
     private voteService: VoteService,
     private animationsService: RoomAnimationsService,
-    private userSessionService: UserSessionService
+    private userSessionService: UserSessionService,
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -311,6 +316,46 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log('Room status updated to:', status);
     } catch (error) {
       console.error('Error updating room status:', error);
+    }
+  }
+
+  /**
+   * Delete room (only for creator after voting ends)
+   */
+  async deleteRoom(): Promise<void> {
+    if (!this.isCreator()) {
+      console.error('Only creator can delete room');
+      return;
+    }
+
+    if (this.room()?.status !== RoomStatus.Ended) {
+      console.error('Room can only be deleted after voting has ended');
+      return;
+    }
+
+    const confirmed = await this.confirmationService.confirm({
+      title: 'Delete Room',
+      message: 'Are you sure you want to delete this room? This action cannot be undone and all data will be permanently deleted.',
+      confirmText: 'Yes, Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const roomId = this.roomId();
+      await this.roomService.deleteRoom(roomId);
+      
+      this.toastService.success('Room deleted successfully');
+      
+      // Navigate to home page
+      await this.router.navigate(['/']);
+    } catch (error) {
+      console.error('Error deleting room:', error);
+      this.toastService.error('Failed to delete room. Please try again.');
     }
   }
 

@@ -2,8 +2,28 @@
   <div class="header-content">
     <button class="btn-home" (click)="goHome()" title="Go to homepage">← Home</button>
     <h1 class="room-question">{{ question }}</h1>
-    <p class="room-id-label">
-      Room ID: <span class="room-id">{{ roomId }}</span>
-    </p>
+    <div class="room-info">
+      <div class="room-id-section">
+        <p class="room-id-label">Room ID:</p>
+        <div class="copy-group">
+          <span class="room-id">{{ roomId }}</span>
+          <button
+            class="btn-copy btn-copy-id"
+            (click)="copyRoomId()"
+            title="Copy room ID"
+          >
+            <i class="fa-regular fa-copy"></i>
+          </button>
+        </div>
+      </div>
+      <button
+        class="btn-copy-link"
+        (click)="copyRoomLink()"
+        title="Copy full room link"
+      >
+        <i class="fa-solid fa-link"></i>
+        <span>Copy Link</span>
+      </button>
+    </div>
   </div>
 </div>

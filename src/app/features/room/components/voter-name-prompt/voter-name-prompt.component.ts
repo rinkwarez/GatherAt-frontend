@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserSessionService } from '../../../../core/services/user-session.service';
+import { UserSessionService } from '../../../../shared/services/user-session.service';
 import gsap from 'gsap';
 
 @Component({

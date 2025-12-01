@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FirestoreService } from '../../../core/services/firestore.service';
+import { FirestoreService } from '../../../shared/services/firestore.service';
 import { Vote } from '../../../models/vote.model';
 import { Room, RoomStatus } from '../../../models/room.model';
 import { runTransaction, doc, getDoc } from 'firebase/firestore';

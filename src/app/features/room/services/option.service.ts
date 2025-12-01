@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FirestoreService } from '../../../core/services/firestore.service';
+import { FirestoreService } from '../../../shared/services/firestore.service';
 import { Option, OptionWithPercentage } from '../../../models/option.model';
 import { orderBy } from 'firebase/firestore';
 

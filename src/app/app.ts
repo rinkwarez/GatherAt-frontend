@@ -1,13 +1,16 @@
 import { Component, signal, inject, effect } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
-import { UserSessionService } from './core/services/user-session.service';
+import { UserSessionService } from './shared/services/user-session.service';
 import { RoomService } from './features/room/services/room.service';
 import { VoteService } from './features/room/services/vote.service';
 import { RoomStatus } from './models/room.model';
+import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
+import { ConfirmationModalComponent } from './shared/components/confirmation-modal/confirmation-modal.component';
+import { ConfirmationService } from './shared/services/confirmation.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ToastContainerComponent, ConfirmationModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -20,7 +23,8 @@ export class App {
     private userSessionService: UserSessionService,
     private router: Router,
     private roomService: RoomService,
-    private voteService: VoteService
+    private voteService: VoteService,
+    private confirmationService: ConfirmationService
   ) {
     // Check if user is logged in on init
     this.isLoggedIn.set(!!this.userSessionService.getDisplayName());
@@ -35,7 +39,17 @@ export class App {
    * Logout - remove vote, leave room, delete user from Firestore, and reload
    */
   async logout(): Promise<void> {
-    if (confirm('This will clear your name and vote. Continue?')) {
+    const confirmed = await this.confirmationService.confirm({
+      title: 'Confirm Logout',
+      message: 'This will clear your name and vote. Are you sure you want to continue?',
+      confirmText: 'Yes, Logout',
+      cancelText: 'Cancel',
+      type: 'warning',
+    });
+
+    if (!confirmed) {
+      return;
+    }
       const displayName = this.userSessionService.getDisplayName();
       const userId = this.userSessionService.getUserId();
 
@@ -78,7 +92,6 @@ export class App {
       // Clear session (deletes user from Firestore and localStorage)
       await this.userSessionService.clearSession();
       window.location.reload();
-    }
   }
 
   /**

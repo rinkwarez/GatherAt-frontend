@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FirestoreService } from '../../../core/services/firestore.service';
+import { FirestoreService } from '../../../shared/services/firestore.service';
 import { Room, CreateRoomData, RoomStatus } from '../../../models/room.model';
 import { writeBatch, doc } from 'firebase/firestore';
 
@@ -32,6 +32,7 @@ export class RoomService {
       participants: [],
       createdBy: createdBy,
       status: RoomStatus.InProgress,
+      optionType: data.optionType,
       createdAt: this.firestoreService.getTimestamp(),
       updatedAt: this.firestoreService.getTimestamp(),
     };
@@ -142,5 +143,39 @@ export class RoomService {
     });
 
     console.log(`Room ${roomId} status updated to ${status}`);
+  }
+
+  /**
+   * Delete room and all its subcollections (only creator can do this after voting ends)
+   */
+  async deleteRoom(roomId: string): Promise<void> {
+    const db = this.firestoreService.getFirestore();
+    const { doc, deleteDoc, collection, getDocs } = await import('firebase/firestore');
+
+    // Delete all options
+    const optionsRef = collection(db, this.ROOMS_COLLECTION, roomId, this.OPTIONS_SUBCOLLECTION);
+    const optionsSnapshot = await getDocs(optionsRef);
+    const deletePromises: Promise<void>[] = [];
+
+    optionsSnapshot.forEach((optionDoc) => {
+      deletePromises.push(deleteDoc(optionDoc.ref));
+    });
+
+    // Delete all votes
+    const votesRef = collection(db, this.ROOMS_COLLECTION, roomId, 'votes');
+    const votesSnapshot = await getDocs(votesRef);
+
+    votesSnapshot.forEach((voteDoc) => {
+      deletePromises.push(deleteDoc(voteDoc.ref));
+    });
+
+    // Wait for all subcollection deletes to complete
+    await Promise.all(deletePromises);
+
+    // Finally delete the room document
+    const roomRef = doc(db, this.ROOMS_COLLECTION, roomId);
+    await deleteDoc(roomRef);
+
+    console.log(`Room ${roomId} deleted successfully`);
   }
 }

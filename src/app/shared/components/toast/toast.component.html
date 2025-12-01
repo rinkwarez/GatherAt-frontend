@@ -1,0 +1,11 @@
+<div
+  #toastElement
+  class="toast toast-{{ toast.type }}"
+  (click)="closeToast()"
+>
+  <div class="toast-icon">{{ icon }}</div>
+  <div class="toast-message">{{ toast.message }}</div>
+  <button class="toast-close" (click)="closeToast()" aria-label="Close">
+    ✕
+  </button>
+</div>

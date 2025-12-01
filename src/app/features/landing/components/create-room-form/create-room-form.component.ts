@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RoomService } from '../../../room/services/room.service';
 import { LandingAnimationsService } from '../../services/landing-animations.service';
-import { UserSessionService } from '../../../../core/services/user-session.service';
+import { UserSessionService } from '../../../../shared/services/user-session.service';
+import { OptionType } from '../../../../models/room.model';
+import { TimePickerComponent } from '../../../../shared/components/time-picker/time-picker.component';
 
 interface TimeOption {
   value: string;
@@ -14,7 +16,7 @@ interface TimeOption {
 @Component({
   selector: 'app-create-room-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TimePickerComponent],
   templateUrl: './create-room-form.component.html',
   styleUrl: './create-room-form.component.css',
 })
@@ -27,6 +29,11 @@ export class CreateRoomFormComponent {
   ]);
   isSubmitting = signal(false);
   errorMessage = signal('');
+  optionType = signal<OptionType>(OptionType.Text);
+  configExpanded = signal(false);
+
+  // Expose enum to template
+  readonly OptionType = OptionType;
 
   private nextOptionId = 3;
 
@@ -51,6 +58,13 @@ export class CreateRoomFormComponent {
   ) {}
 
   /**
+   * Toggle configuration section
+   */
+  toggleConfig(): void {
+    this.configExpanded.update((expanded) => !expanded);
+  }
+
+  /**
    * Add a new time option input
    */
   addOption(): void {
@@ -73,6 +87,54 @@ export class CreateRoomFormComponent {
   updateOption(id: number, value: string): void {
     this.timeOptions.update((options) =>
       options.map((opt) => (opt.id === id ? { ...opt, value } : opt))
+    );
+  }
+
+  /**
+   * Get start time from time range value (format: "start|end")
+   */
+  getTimeRangeStart(value: string): string {
+    if (!value) return '';
+    const parts = value.split('|');
+    return parts[0] || '';
+  }
+
+  /**
+   * Get end time from time range value (format: "start|end")
+   */
+  getTimeRangeEnd(value: string): string {
+    if (!value) return '';
+    const parts = value.split('|');
+    return parts[1] || '';
+  }
+
+  /**
+   * Update time range start
+   */
+  updateTimeRangeStart(id: number, startValue: string): void {
+    this.timeOptions.update((options) =>
+      options.map((opt) => {
+        if (opt.id === id) {
+          const endValue = this.getTimeRangeEnd(opt.value);
+          return { ...opt, value: `${startValue}|${endValue}` };
+        }
+        return opt;
+      })
+    );
+  }
+
+  /**
+   * Update time range end
+   */
+  updateTimeRangeEnd(id: number, endValue: string): void {
+    this.timeOptions.update((options) =>
+      options.map((opt) => {
+        if (opt.id === id) {
+          const startValue = this.getTimeRangeStart(opt.value);
+          return { ...opt, value: `${startValue}|${endValue}` };
+        }
+        return opt;
+      })
     );
   }
 
@@ -120,6 +182,7 @@ export class CreateRoomFormComponent {
           question: this.question().trim(),
           timezone: this.timezone(),
           options: validOptions,
+          optionType: this.optionType(),
         },
         userId
       );
@@ -130,6 +193,43 @@ export class CreateRoomFormComponent {
       console.error('Error creating room:', error);
       this.errorMessage.set('Failed to create room. Please try again.');
       this.isSubmitting.set(false);
+    }
+  }
+
+  /**
+   * Format time value for display
+   */
+  formatTime(timeStr: string): string {
+    if (!timeStr) return '';
+    try {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      const date = new Date();
+      date.setHours(hours, minutes);
+      return date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+    } catch {
+      return timeStr;
+    }
+  }
+
+  /**
+   * Format time range for display
+   */
+  formatTimeRange(rangeStr: string): string {
+    if (!rangeStr) return '';
+    try {
+      const [startStr, endStr] = rangeStr.split('|');
+      if (!startStr || !endStr) return rangeStr;
+
+      const startTime = this.formatTime(startStr);
+      const endTime = this.formatTime(endStr);
+
+      return `${startTime} - ${endTime}`;
+    } catch {
+      return rangeStr;
     }
   }
 
