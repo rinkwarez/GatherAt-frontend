@@ -50,48 +50,48 @@ export class App {
     if (!confirmed) {
       return;
     }
-      const displayName = this.userSessionService.getDisplayName();
-      const userId = this.userSessionService.getUserId();
+    const displayName = this.userSessionService.getDisplayName();
+    const userId = this.userSessionService.getUserId();
 
-      // Check if user is currently in a room
-      const currentUrl = this.router.url;
-      const roomMatch = currentUrl.match(/\/r\/([^\/\?]+)/);
+    // Check if user is currently in a room
+    const currentUrl = this.router.url;
+    const roomMatch = currentUrl.match(/\/r\/([^\/\?]+)/);
 
-      if (roomMatch && displayName && userId) {
-        const roomId = roomMatch[1];
-        try {
-          // Check room status first
-          const room = await this.roomService.roomExists(roomId);
-          if (room) {
-            // Get room data to check status
-            const roomData = await new Promise((resolve) => {
-              const subscription = this.roomService.getRoom(roomId).subscribe((roomData) => {
-                subscription.unsubscribe();
-                resolve(roomData);
-              });
+    if (roomMatch && displayName && userId) {
+      const roomId = roomMatch[1];
+      try {
+        // Check room status first
+        const room = await this.roomService.roomExists(roomId);
+        if (room) {
+          // Get room data to check status
+          const roomData = await new Promise((resolve) => {
+            const subscription = this.roomService.getRoom(roomId).subscribe((roomData) => {
+              subscription.unsubscribe();
+              resolve(roomData);
             });
+          });
 
-            // Only remove vote and leave if voting hasn't ended
-            if (roomData && (roomData as any).status !== RoomStatus.Ended) {
-              // Remove vote first
-              await this.voteService.removeUserVote(roomId, userId);
-              console.log('Removed vote before logout');
+          // Only remove vote and leave if voting hasn't ended
+          if (roomData && (roomData as any).status !== RoomStatus.Ended) {
+            // Remove vote first
+            await this.voteService.removeUserVote(roomId, userId);
+            console.log('Removed vote before logout');
 
-              // Then leave room
-              await this.roomService.leaveRoom(roomId, displayName);
-              console.log('Left room before logout');
-            } else {
-              console.log('Room voting has ended - skipping cleanup');
-            }
+            // Then leave room
+            await this.roomService.leaveRoom(roomId, displayName);
+            console.log('Left room before logout');
+          } else {
+            console.log('Room voting has ended - skipping cleanup');
           }
-        } catch (error) {
-          console.error('Error cleaning up on logout:', error);
         }
+      } catch (error) {
+        console.error('Error cleaning up on logout:', error);
       }
+    }
 
-      // Clear session (deletes user from Firestore and localStorage)
-      await this.userSessionService.clearSession();
-      window.location.reload();
+    // Clear session (deletes user from Firestore and localStorage)
+    await this.userSessionService.clearSession();
+    window.location.reload();
   }
 
   /**

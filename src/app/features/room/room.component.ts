@@ -335,10 +335,11 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const confirmed = await this.confirmationService.confirm({
       title: 'Delete Room',
-      message: 'Are you sure you want to delete this room? This action cannot be undone and all data will be permanently deleted.',
+      message:
+        'Are you sure you want to delete this room? This action cannot be undone and all data will be permanently deleted.',
       confirmText: 'Yes, Delete',
       cancelText: 'Cancel',
-      type: 'danger'
+      type: 'danger',
     });
 
     if (!confirmed) {
@@ -348,9 +349,9 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       const roomId = this.roomId();
       await this.roomService.deleteRoom(roomId);
-      
+
       this.toastService.success('Room deleted successfully');
-      
+
       // Navigate to home page
       await this.router.navigate(['/']);
     } catch (error) {
