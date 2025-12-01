@@ -10,6 +10,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { OptionWithPercentage } from '../../../../models/option.model';
 import { RoomAnimationsService } from '../../services/room-animations.service';
+import { OptionType } from '../../../../models/room.model';
 import gsap from 'gsap';
 
 @Component({
@@ -24,6 +25,7 @@ export class OptionCardComponent implements OnChanges {
   @Input() index: number = 0;
   @Input() userVote: string | null = null; // The optionId the user voted for
   @Input() isVoting: boolean = false;
+  @Input() optionType: OptionType = OptionType.Text;
   @Output() vote = new EventEmitter<string>();
 
   private previousVoteCount: number = 0;
@@ -77,6 +79,80 @@ export class OptionCardComponent implements OnChanges {
    */
   get isUserVote(): boolean {
     return this.userVote === this.option.id;
+  }
+
+  /**
+   * Format label based on option type
+   */
+  get formattedLabel(): string {
+    if (this.optionType === OptionType.Text) {
+      return this.option.label;
+    } else if (this.optionType === OptionType.Time) {
+      return this.formatDateTime(this.option.label);
+    } else if (this.optionType === OptionType.TimeRange) {
+      return this.formatTimeRange(this.option.label);
+    }
+    return this.option.label;
+  }
+
+  /**
+   * Format time string to readable format
+   * Example: "18:00" -> "6:00 PM"
+   */
+  private formatDateTime(timeStr: string): string {
+    try {
+      // Parse time string (HH:mm format)
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      const date = new Date();
+      date.setHours(hours, minutes);
+
+      // Format: "6:00 PM"
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      return time;
+    } catch {
+      return timeStr;
+    }
+  }
+
+  /**
+   * Format time range ("start|end") to readable format
+   * Example: "18:00|20:00" -> "6:00 PM - 8:00 PM"
+   */
+  private formatTimeRange(rangeStr: string): string {
+    try {
+      const [startStr, endStr] = rangeStr.split('|');
+      if (!startStr || !endStr) return rangeStr;
+
+      // Parse start time
+      const [startHours, startMinutes] = startStr.split(':').map(Number);
+      const startDate = new Date();
+      startDate.setHours(startHours, startMinutes);
+
+      // Parse end time
+      const [endHours, endMinutes] = endStr.split(':').map(Number);
+      const endDate = new Date();
+      endDate.setHours(endHours, endMinutes);
+
+      const startTime = startDate.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+      const endTime = endDate.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      return `${startTime} - ${endTime}`;
+    } catch {
+      return rangeStr;
+    }
   }
 
   /**

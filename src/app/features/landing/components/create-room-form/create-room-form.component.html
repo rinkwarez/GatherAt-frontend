@@ -19,23 +19,110 @@
       />
     </div>
 
+    <!-- Configuration Section (Collapsible) -->
+    <div class="config-section">
+      <button
+        type="button"
+        class="config-toggle"
+        (click)="toggleConfig()"
+        [disabled]="isSubmitting()"
+      >
+        <i class="fa-solid fa-sliders config-icon"></i>
+        <span>Configure</span>
+        <span class="arrow-icon">{{ configExpanded() ? '▼' : '▶' }}</span>
+      </button>
+
+      @if (configExpanded()) {
+      <div class="config-content">
+        <div class="config-row">
+          <label class="config-label">Option Type</label>
+          <div class="option-type-badges">
+            <button
+              type="button"
+              class="type-badge"
+              [class.active]="optionType() === OptionType.Text"
+              (click)="optionType.set(OptionType.Text)"
+              [disabled]="isSubmitting()"
+            >
+              <span class="badge-icon">📝</span>
+              <span>Text</span>
+            </button>
+            <button
+              type="button"
+              class="type-badge"
+              [class.active]="optionType() === OptionType.Time"
+              (click)="optionType.set(OptionType.Time)"
+              [disabled]="isSubmitting()"
+            >
+              <span class="badge-icon">🕐</span>
+              <span>Time</span>
+            </button>
+            <button
+              type="button"
+              class="type-badge"
+              [class.active]="optionType() === OptionType.TimeRange"
+              (click)="optionType.set(OptionType.TimeRange)"
+              [disabled]="isSubmitting()"
+            >
+              <span class="badge-icon">⏱️</span>
+              <span>Range</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
     <!-- Time Options List -->
     <div class="form-group">
-      <label class="form-label"> Time Options <span class="required">*</span> </label>
+      <label class="form-label">
+        @if (optionType() === OptionType.Text) { Options } @else if (optionType() ===
+        OptionType.Time) { Time Options } @else { Time Range Options }
+        <span class="required">*</span>
+      </label>
 
       <div class="options-list">
         @for (option of timeOptions(); track trackByOptionId($index, option)) {
         <div class="option-row">
+          @if (optionType() === OptionType.Text) {
           <input
             type="text"
             class="form-input option-input"
-            placeholder="e.g., Saturday 8 PM, Tomorrow 7-9 PM"
+            placeholder="e.g., Option A, Choice 1, 100"
             [value]="option.value"
             (input)="updateOption(option.id, $any($event.target).value)"
             [disabled]="isSubmitting()"
             maxlength="100"
           />
-          @if (timeOptions().length > 1) {
+          } @else if (optionType() === OptionType.Time) {
+          <app-time-picker
+            [(ngModel)]="option.value"
+            (ngModelChange)="updateOption(option.id, $event)"
+            [disabled]="isSubmitting()"
+            [name]="'time-' + option.id"
+          >
+          </app-time-picker>
+          } @else {
+          <div class="time-range-inputs">
+            <app-time-picker
+              [ngModel]="getTimeRangeStart(option.value)"
+              (ngModelChange)="updateTimeRangeStart(option.id, $event)"
+              [disabled]="isSubmitting()"
+              [name]="'time-start-' + option.id"
+              placeholder="Start time"
+            >
+            </app-time-picker>
+            <span class="range-separator">to</span>
+            <app-time-picker
+              [ngModel]="getTimeRangeEnd(option.value)"
+              (ngModelChange)="updateTimeRangeEnd(option.id, $event)"
+              [disabled]="isSubmitting()"
+              [name]="'time-end-' + option.id"
+              placeholder="End time"
+            >
+            </app-time-picker>
+          </div>
+          } @if (timeOptions().length > 1) {
           <button
             type="button"
             class="btn-remove"

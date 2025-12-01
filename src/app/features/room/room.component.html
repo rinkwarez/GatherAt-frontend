@@ -45,6 +45,8 @@
       <button class="btn-control btn-end" (click)="updateStatus(RoomStatus.Ended)">
         🏁 End Voting
       </button>
+      } @if (room()!.status === RoomStatus.Ended) {
+      <button class="btn-control btn-delete" (click)="deleteRoom()">🗑️ Delete Room</button>
       }
     </div>
   </div>
@@ -70,7 +72,7 @@
       <div class="voters-card" [class.mobile-collapsed]="!participantsExpanded()">
         <h3 class="voters-title" (click)="toggleParticipants()">
           <span class="voters-icon">👥</span>
-          <span>Participants ({{ room()!.participants?.length || 0 }})</span>
+          <span>Participants ({{ room()!.participants.length || 0 }})</span>
           <span class="accordion-icon">{{ participantsExpanded() ? '▼' : '▶' }}</span>
         </h3>
         <div class="voters-list" [class.expanded]="participantsExpanded()">
@@ -90,7 +92,10 @@
     <!-- Options Section -->
     <div class="room-content">
       <!-- Add Option Form -->
-      <app-add-option-form [roomId]="roomId()"></app-add-option-form>
+      <app-add-option-form
+        [roomId]="roomId()"
+        [optionType]="room()!.optionType"
+      ></app-add-option-form>
 
       @if (options().length > 0) {
       <div class="options-list">
@@ -100,6 +105,7 @@
           [index]="$index"
           [userVote]="userVote()"
           [isVoting]="isVoting()"
+          [optionType]="room()!.optionType"
           (vote)="onVote($event)"
         >
         </app-option-card>

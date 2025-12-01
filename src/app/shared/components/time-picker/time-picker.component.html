@@ -1,0 +1,41 @@
+<div class="time-picker">
+  <div class="time-picker-selects">
+    <!-- Hour Select -->
+    <select
+      class="time-select hour-select"
+      [value]="hour()"
+      (change)="updateHour($event)"
+      [disabled]="disabled"
+    >
+      @for (h of hours; track h) {
+      <option [value]="h">{{ h }}</option>
+      }
+    </select>
+
+    <span class="time-separator">:</span>
+
+    <!-- Minute Select -->
+    <select
+      class="time-select minute-select"
+      [value]="minute()"
+      (change)="updateMinute($event)"
+      [disabled]="disabled"
+    >
+      @for (m of minutes; track m) {
+      <option [value]="m">{{ m }}</option>
+      }
+    </select>
+
+    <!-- AM/PM Toggle -->
+    <button
+      type="button"
+      class="period-toggle"
+      (click)="togglePeriod()"
+      [disabled]="disabled"
+      [class.am]="period() === 'AM'"
+      [class.pm]="period() === 'PM'"
+    >
+      {{ period() }}
+    </button>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { roomExistsGuard } from './core/guards/room-exists.guard';
+import { roomExistsGuard } from './shared/guards/room-exists.guard';
 
 export const routes: Routes = [
   {

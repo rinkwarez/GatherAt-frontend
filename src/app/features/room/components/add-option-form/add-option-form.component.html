@@ -1,6 +1,7 @@
 <div class="add-option-form">
   <form (ngSubmit)="onSubmit()" class="form-container">
     <div class="input-wrapper">
+      @if (optionType === OptionType.Text) {
       <input
         type="text"
         class="option-input"
@@ -10,10 +11,37 @@
         [disabled]="isSubmitting()"
         maxlength="100"
       />
+      } @else if (optionType === OptionType.Time) {
+      <app-time-picker
+        [(ngModel)]="optionLabel"
+        name="optionLabel"
+        [disabled]="isSubmitting()"
+        placeholder="Select time"
+      >
+      </app-time-picker>
+      } @else {
+      <div class="time-range-wrapper">
+        <app-time-picker
+          [(ngModel)]="timeRangeStart"
+          name="timeRangeStart"
+          [disabled]="isSubmitting()"
+          placeholder="Start time"
+        >
+        </app-time-picker>
+        <span class="range-separator">to</span>
+        <app-time-picker
+          [(ngModel)]="timeRangeEnd"
+          name="timeRangeEnd"
+          [disabled]="isSubmitting()"
+          placeholder="End time"
+        >
+        </app-time-picker>
+      </div>
+      }
       <button
         type="submit"
         class="btn-add"
-        [disabled]="isSubmitting() || !optionLabel().trim()"
+        [disabled]="isSubmitting() || !canSubmit()"
         [class.submitting]="isSubmitting()"
         tabindex="-1"
       >
