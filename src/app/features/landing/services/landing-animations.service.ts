@@ -88,6 +88,34 @@ export class LandingAnimationsService {
   }
 
   /**
+   * Animate recent rooms section
+   * Fade in and slide up after hero section loads
+   */
+  animateRecentRooms(): void {
+    // Set initial state
+    gsap.set('[data-animate="recent-rooms"]', {
+      opacity: 0,
+      y: 30,
+    });
+
+    // Animate in after a delay
+    const tl = gsap.timeline({
+      delay: 1.5, // Wait for hero section to finish
+      defaults: {
+        duration: 0.6,
+        ease: 'power3.out',
+      },
+    });
+
+    tl.to('[data-animate="recent-rooms"]', {
+      opacity: 1,
+      y: 0,
+    });
+
+    this.animations.push(tl);
+  }
+
+  /**
    * Button hover animation - lift slightly
    */
   animateButtonHover(element: HTMLElement): void {

@@ -12,6 +12,11 @@ export enum OptionType {
   TimeRange = 'TimeRange',
 }
 
+export enum PollType {
+  SS = 'SS', // Single Select
+  MS = 'MS', // Multiple Select
+}
+
 export interface Room {
   id?: string;
   question: string;
@@ -20,6 +25,7 @@ export interface Room {
   createdBy: string; // User ID of the creator
   status?: RoomStatus; // Status of the polling (optional for backward compatibility)
   optionType: OptionType; // Type of options in this room
+  pollType?: PollType; // Single or Multiple select (optional for backward compatibility)
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -29,4 +35,5 @@ export interface CreateRoomData {
   timezone: string | null;
   options: string[];
   optionType: OptionType;
+  pollType: PollType;
 }

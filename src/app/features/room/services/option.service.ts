@@ -55,7 +55,7 @@ export class OptionService {
   /**
    * Add a new option to a room
    */
-  async addOption(roomId: string, label: string): Promise<void> {
+  async addOption(roomId: string, label: string): Promise<string> {
     const optionsPath = `${this.ROOMS_COLLECTION}/${roomId}/${this.OPTIONS_SUBCOLLECTION}`;
 
     // Get current options to determine the next order value
@@ -89,5 +89,7 @@ export class OptionService {
       this.OPTIONS_SUBCOLLECTION,
       optionRef.id
     );
+
+    return optionRef.id; // Return the new option ID
   }
 }

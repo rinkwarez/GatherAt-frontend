@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LandingAnimationsService } from './services/landing-animations.service';
 import { CreateRoomFormComponent } from './components/create-room-form/create-room-form.component';
 import { JoinRoomFormComponent } from './components/join-room-form/join-room-form.component';
+import { RecentRoomsComponent } from './components/recent-rooms/recent-rooms.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CreateRoomFormComponent, JoinRoomFormComponent],
+  imports: [CreateRoomFormComponent, JoinRoomFormComponent, RecentRoomsComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
 })

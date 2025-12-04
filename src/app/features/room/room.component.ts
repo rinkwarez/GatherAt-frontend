@@ -9,7 +9,7 @@ import { RoomAnimationsService } from './services/room-animations.service';
 import { UserSessionService } from '../../shared/services/user-session.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { ConfirmationService } from '../../shared/services/confirmation.service';
-import { Room, RoomStatus } from '../../models/room.model';
+import { Room, RoomStatus, PollType } from '../../models/room.model';
 import { OptionWithPercentage } from '../../models/option.model';
 import { Vote } from '../../models/vote.model';
 import { RoomHeaderComponent } from './components/room-header/room-header.component';
@@ -38,13 +38,14 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoading = signal(true);
   error = signal<string>('');
   showNamePrompt = signal(false);
-  userVote = signal<string | null>(null); // The optionId the user voted for
+  userVotes = signal<string[]>([]); // Array of optionIds the user voted for
   isVoting = signal(false);
   isCreator = signal(false); // Whether current user is the room creator
   participantsExpanded = signal(false); // For mobile accordion
 
-  // Expose enum to template
+  // Expose enums to template
   readonly RoomStatus = RoomStatus;
+  readonly PollType = PollType;
   private roomSubscription?: Subscription;
   private optionsSubscription?: Subscription;
   private voteSubscription?: Subscription;
@@ -240,12 +241,12 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('Setting up vote listener for userId:', userId);
 
     this.voteSubscription = this.voteService.getUserVote(this.roomId(), userId).subscribe({
-      next: (optionId) => {
-        console.log('User current vote:', optionId);
-        this.userVote.set(optionId);
+      next: (optionIds) => {
+        console.log('User current votes:', optionIds);
+        this.userVotes.set(optionIds);
       },
       error: (err) => {
-        console.error('Error loading user vote:', err);
+        console.error('Error loading user votes:', err);
       },
     });
   }
@@ -292,7 +293,11 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       this.isVoting.set(true);
       console.log('Voting for option:', optionId);
-      await this.voteService.vote(this.roomId(), optionId, userId, displayName);
+
+      // Get poll type, default to SS for backward compatibility
+      const pollType = currentRoom?.pollType || PollType.SS;
+
+      await this.voteService.vote(this.roomId(), optionId, userId, displayName, pollType);
       console.log('Vote successful');
     } catch (error) {
       console.error('Error voting:', error);
@@ -300,6 +305,15 @@ export class RoomComponent implements OnInit, OnDestroy, AfterViewInit {
     } finally {
       this.isVoting.set(false);
     }
+  }
+
+  /**
+   * Handle new option added - auto-vote for the creator
+   */
+  async onOptionAdded(optionId: string): Promise<void> {
+    console.log('New option added:', optionId);
+    // Automatically vote for the newly added option
+    await this.onVote(optionId);
   }
 
   /**

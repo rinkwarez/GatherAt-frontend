@@ -39,4 +39,78 @@
     ></div>
     <span class="percentage-label">{{ option.percentage.toFixed(0) }}%</span>
   </div>
+
+  <!-- Comments Section -->
+  <div class="comments-section">
+    <!-- Comments Toggle Button -->
+    <button class="comments-toggle" (click)="toggleComments($event)" type="button" title="Comments">
+      <svg
+        class="chat-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+      </svg>
+      <span class="comments-count">{{ comments().length }}</span>
+    </button>
+
+    <!-- Comments Container -->
+    <div class="comments-container">
+      <!-- Existing Comments -->
+      @if (comments().length > 0) {
+      <div class="comments-list-wrapper">
+        <div class="comments-list" (scroll)="onCommentsScroll($event)">
+          @for (comment of comments(); track comment.id) {
+          <div class="comment-item">
+            <div class="comment-header">
+              <span class="comment-author">{{ comment.userName }}</span>
+              <span class="comment-time">{{ formatCommentTime(comment.createdAt) }}</span>
+            </div>
+            <div class="comment-text">{{ comment.text }}</div>
+          </div>
+          }
+        </div>
+
+        <!-- Scroll to Bottom Button -->
+        @if (showScrollButton()) {
+        <button
+          class="scroll-to-bottom"
+          (click)="scrollToBottom(); $event.stopPropagation()"
+          type="button"
+          title="Scroll to bottom"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 10l5 5 5-5z" />
+          </svg>
+        </button>
+        }
+      </div>
+      }
+
+      <!-- Add Comment Input (Always visible) -->
+      <div class="comment-input-container">
+        <input
+          type="text"
+          class="comment-input"
+          [placeholder]="roomStatus === 'Ended' ? 'Voting has ended' : 'Add a comment...'"
+          [(ngModel)]="newCommentText"
+          (click)="$event.stopPropagation()"
+          (keyup.enter)="addComment($event)"
+          [disabled]="roomStatus === 'Ended'"
+        />
+        <button
+          class="comment-submit"
+          (click)="addComment($event)"
+          [disabled]="!newCommentText().trim() || roomStatus === 'Ended'"
+          type="button"
+          title="Send comment"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

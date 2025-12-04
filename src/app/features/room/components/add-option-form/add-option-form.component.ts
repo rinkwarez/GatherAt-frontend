@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OptionService } from '../../services/option.service';
@@ -15,6 +15,7 @@ import { TimePickerComponent } from '../../../../shared/components/time-picker/t
 export class AddOptionFormComponent {
   @Input({ required: true }) roomId!: string;
   @Input({ required: true }) optionType!: OptionType;
+  @Output() optionAdded = new EventEmitter<string>(); // Emit the new option ID
 
   optionLabel = signal('');
   timeRangeStart = signal('');
@@ -78,8 +79,11 @@ export class AddOptionFormComponent {
       this.isSubmitting.set(true);
       this.error.set('');
 
-      // Add the option
-      await this.optionService.addOption(this.roomId, label);
+      // Add the option and get its ID
+      const newOptionId = await this.optionService.addOption(this.roomId, label);
+
+      // Emit the new option ID for auto-voting
+      this.optionAdded.emit(newOptionId);
 
       // Clear the inputs on success
       this.optionLabel.set('');

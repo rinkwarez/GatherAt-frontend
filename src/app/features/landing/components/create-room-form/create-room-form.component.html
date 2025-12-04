@@ -69,6 +69,32 @@
             </button>
           </div>
         </div>
+
+        <div class="config-row">
+          <label class="config-label">Poll Type</label>
+          <div class="option-type-badges">
+            <button
+              type="button"
+              class="type-badge"
+              [class.active]="pollType() === PollType.SS"
+              (click)="pollType.set(PollType.SS)"
+              [disabled]="isSubmitting()"
+            >
+              <span class="badge-icon">⭕</span>
+              <span>Single Choice</span>
+            </button>
+            <button
+              type="button"
+              class="type-badge"
+              [class.active]="pollType() === PollType.MS"
+              (click)="pollType.set(PollType.MS)"
+              [disabled]="isSubmitting()"
+            >
+              <span class="badge-icon">☑️</span>
+              <span>Multiple Choice</span>
+            </button>
+          </div>
+        </div>
       </div>
       }
     </div>

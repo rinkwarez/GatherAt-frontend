@@ -6,33 +6,76 @@ import {
   ElementRef,
   OnChanges,
   SimpleChanges,
+  OnInit,
+  OnDestroy,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { OptionWithPercentage } from '../../../../models/option.model';
 import { RoomAnimationsService } from '../../services/room-animations.service';
-import { OptionType } from '../../../../models/room.model';
+import { OptionType, PollType, RoomStatus } from '../../../../models/room.model';
+import { CommentService } from '../../services/comment.service';
+import { Comment } from '../../../../models/comment.model';
+import { UserSessionService } from '../../../../shared/services/user-session.service';
+import { Subscription } from 'rxjs';
 import gsap from 'gsap';
 
 @Component({
   selector: 'app-option-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './option-card.component.html',
   styleUrl: './option-card.component.css',
 })
-export class OptionCardComponent implements OnChanges {
+export class OptionCardComponent implements OnChanges, OnInit, OnDestroy {
   @Input() option!: OptionWithPercentage;
   @Input() index: number = 0;
-  @Input() userVote: string | null = null; // The optionId the user voted for
+  @Input() userVotes: string[] = []; // Array of optionIds the user voted for
   @Input() isVoting: boolean = false;
   @Input() optionType: OptionType = OptionType.Text;
+  @Input() pollType: PollType = PollType.SS;
+  @Input() roomId: string = '';
+  @Input() roomStatus: RoomStatus = RoomStatus.InProgress;
   @Output() vote = new EventEmitter<string>();
+
+  // Comments
+  comments = signal<Comment[]>([]);
+  showCommentInput = signal<boolean>(false);
+  newCommentText = signal<string>('');
+  showScrollButton = signal<boolean>(false);
+  private commentsSubscription?: Subscription;
 
   private previousVoteCount: number = 0;
   private previousIsWinner: boolean = false;
   private previousPercentage: number = 0;
 
-  constructor(private elementRef: ElementRef, private animationsService: RoomAnimationsService) {}
+  constructor(
+    private elementRef: ElementRef,
+    private animationsService: RoomAnimationsService,
+    private commentService: CommentService,
+    private userSessionService: UserSessionService
+  ) {}
+
+  ngOnInit(): void {
+    // Subscribe to comments for this option
+    if (this.roomId && this.option?.id) {
+      this.commentsSubscription = this.commentService
+        .getComments(this.roomId, this.option.id)
+        .subscribe({
+          next: (comments) => {
+            this.comments.set(comments);
+          },
+          error: (error) => {
+            console.error('Error loading comments:', error);
+          },
+        });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.commentsSubscription?.unsubscribe();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     // Skip on first initialization
@@ -75,10 +118,10 @@ export class OptionCardComponent implements OnChanges {
   }
 
   /**
-   * Check if this option is the user's current vote
+   * Check if this option is in the user's current votes
    */
   get isUserVote(): boolean {
-    return this.userVote === this.option.id;
+    return this.option.id ? this.userVotes.includes(this.option.id) : false;
   }
 
   /**
@@ -208,5 +251,98 @@ export class OptionCardComponent implements OnChanges {
     if (this.option.id) {
       this.vote.emit(this.option.id);
     }
+  }
+
+  /**
+   * Toggle comment input visibility
+   */
+  toggleComments(event: Event): void {
+    event.stopPropagation(); // Prevent card click
+    this.showCommentInput.set(!this.showCommentInput());
+  }
+
+  /**
+   * Add a new comment
+   */
+  async addComment(event: Event): Promise<void> {
+    event.stopPropagation(); // Prevent card click
+
+    const text = this.newCommentText().trim();
+    if (!text || !this.option?.id) return;
+
+    try {
+      const userId = this.userSessionService.getUserId();
+      const userName = this.userSessionService.getDisplayName() || 'Anonymous';
+
+      await this.commentService.addComment(this.roomId, {
+        optionId: this.option.id,
+        userId,
+        userName,
+        text,
+      });
+
+      // Clear input
+      this.newCommentText.set('');
+
+      // Scroll to bottom after adding comment
+      setTimeout(() => this.scrollToBottom(), 100);
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
+  }
+
+  /**
+   * Handle scroll event on comments list
+   */
+  onCommentsScroll(event: Event): void {
+    const element = event.target as HTMLElement;
+    const scrollTop = element.scrollTop;
+    const scrollHeight = element.scrollHeight;
+    const clientHeight = element.clientHeight;
+
+    // Show button if not at bottom (with 50px threshold)
+    this.showScrollButton.set(scrollHeight - scrollTop - clientHeight > 50);
+  }
+
+  /**
+   * Scroll comments list to bottom
+   */
+  scrollToBottom(): void {
+    const commentsList = this.elementRef.nativeElement.querySelector('.comments-list');
+    if (commentsList) {
+      commentsList.scrollTop = commentsList.scrollHeight;
+      this.showScrollButton.set(false);
+    }
+  }
+
+  /**
+   * Format comment timestamp
+   */
+  formatCommentTime(createdAt: any): string {
+    let date: Date;
+
+    // Handle Firestore Timestamp
+    if (createdAt?.toDate && typeof createdAt.toDate === 'function') {
+      date = createdAt.toDate();
+    } else if (createdAt instanceof Date) {
+      date = createdAt;
+    } else if (typeof createdAt === 'string' || typeof createdAt === 'number') {
+      date = new Date(createdAt);
+    } else {
+      return 'Just now';
+    }
+
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}d ago`;
   }
 }

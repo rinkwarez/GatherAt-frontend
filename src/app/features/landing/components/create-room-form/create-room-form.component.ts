@@ -5,7 +5,8 @@ import { CommonModule } from '@angular/common';
 import { RoomService } from '../../../room/services/room.service';
 import { LandingAnimationsService } from '../../services/landing-animations.service';
 import { UserSessionService } from '../../../../shared/services/user-session.service';
-import { OptionType } from '../../../../models/room.model';
+import { RoomHistoryService } from '../../../../shared/services/room-history.service';
+import { OptionType, PollType } from '../../../../models/room.model';
 import { TimePickerComponent } from '../../../../shared/components/time-picker/time-picker.component';
 
 interface TimeOption {
@@ -30,10 +31,12 @@ export class CreateRoomFormComponent {
   isSubmitting = signal(false);
   errorMessage = signal('');
   optionType = signal<OptionType>(OptionType.Text);
+  pollType = signal<PollType>(PollType.SS);
   configExpanded = signal(false);
 
-  // Expose enum to template
+  // Expose enums to template
   readonly OptionType = OptionType;
+  readonly PollType = PollType;
 
   private nextOptionId = 3;
 
@@ -54,7 +57,8 @@ export class CreateRoomFormComponent {
     private roomService: RoomService,
     private router: Router,
     private animationsService: LandingAnimationsService,
-    private userSessionService: UserSessionService
+    private userSessionService: UserSessionService,
+    private roomHistoryService: RoomHistoryService
   ) {}
 
   /**
@@ -183,9 +187,19 @@ export class CreateRoomFormComponent {
           timezone: this.timezone(),
           options: validOptions,
           optionType: this.optionType(),
+          pollType: this.pollType(),
         },
         userId
       );
+
+      // Save room to history
+      this.roomHistoryService.addRoom({
+        id: roomId,
+        question: this.question().trim(),
+        createdAt: new Date().toISOString(),
+        optionType: this.optionType(),
+        pollType: this.pollType(),
+      });
 
       // Navigate to room page
       await this.router.navigate(['/r', roomId]);

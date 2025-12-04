@@ -33,6 +33,7 @@ export class RoomService {
       createdBy: createdBy,
       status: RoomStatus.InProgress,
       optionType: data.optionType,
+      pollType: data.pollType,
       createdAt: this.firestoreService.getTimestamp(),
       updatedAt: this.firestoreService.getTimestamp(),
     };
