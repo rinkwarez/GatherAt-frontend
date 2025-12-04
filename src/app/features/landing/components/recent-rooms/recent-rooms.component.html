@@ -1,0 +1,49 @@
+<div class="recent-rooms-container" data-animate="recent-rooms">
+  <div class="recent-rooms">
+    <h3 class="section-title">Your Recent Rooms</h3>
+    @if (rooms().length > 0) {
+    <div class="rooms-list">
+      @for (room of rooms(); track room.id) {
+      <div class="room-item">
+        <div class="room-info" (click)="openRoom(room.id)">
+          <div class="room-badges">
+            <span class="badge" [title]="room.optionType">
+              {{ getOptionTypeIcon(room.optionType) }}
+            </span>
+            <span class="badge" [title]="getPollTypeLabel(room.pollType) + ' Choice'">
+              {{ getPollTypeIcon(room.pollType) }}
+            </span>
+          </div>
+          <h4 class="room-question">{{ room.question }}</h4>
+          <span class="room-date">{{ getFormattedDate(room.createdAt) }}</span>
+        </div>
+        <div class="room-actions">
+          <button
+            type="button"
+            class="btn-icon btn-open"
+            (click)="openRoom(room.id)"
+            title="Open room"
+          >
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          <button
+            type="button"
+            class="btn-icon btn-delete"
+            (click)="deleteRoom(room, $event)"
+            title="Remove from history"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    } @else {
+    <div class="empty-state">
+      <i class="fa-solid fa-clock-rotate-left empty-icon"></i>
+      <p class="empty-text">No recent rooms yet</p>
+      <p class="empty-subtext">Create your first poll to get started!</p>
+    </div>
+    }
+  </div>
+</div>

@@ -95,6 +95,7 @@
       <app-add-option-form
         [roomId]="roomId()"
         [optionType]="room()!.optionType"
+        (optionAdded)="onOptionAdded($event)"
       ></app-add-option-form>
 
       @if (options().length > 0) {
@@ -103,9 +104,12 @@
         <app-option-card
           [option]="option"
           [index]="$index"
-          [userVote]="userVote()"
+          [userVotes]="userVotes()"
           [isVoting]="isVoting()"
           [optionType]="room()!.optionType"
+          [pollType]="room()!.pollType || PollType.SS"
+          [roomId]="roomId()"
+          [roomStatus]="room()!.status || RoomStatus.InProgress"
           (vote)="onVote($event)"
         >
         </app-option-card>
