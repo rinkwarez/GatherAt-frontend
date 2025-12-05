@@ -87,8 +87,20 @@ jobs:
           echo "Cloning repository: ${{ steps.repo_info.outputs.repo }}"
           echo "Branch: ${{ steps.repo_info.outputs.branch }}"
           
+          # Parse repository URL and inject PAT if available
+          REPO_URL="${{ steps.repo_info.outputs.repo }}"
+          if [ -n "${{ secrets.SOURCE_REPO_PAT }}" ]; then
+            # For GitHub URLs, inject the PAT
+            if [[ "$REPO_URL" =~ ^https://github.com/ ]]; then
+              REPO_URL=$(echo "$REPO_URL" | sed "s|https://github.com/|https://${{ secrets.SOURCE_REPO_PAT }}@github.com/|")
+            elif [[ "$REPO_URL" =~ ^https:// ]]; then
+              # For other HTTPS URLs, inject PAT after https://
+              REPO_URL=$(echo "$REPO_URL" | sed "s|https://|https://${{ secrets.SOURCE_REPO_PAT }}@|")
+            fi
+          fi
+          
           git clone --depth 1 --branch ${{ steps.repo_info.outputs.branch }} \
-            ${{ steps.repo_info.outputs.repo }} ./repo
+            "$REPO_URL" ./repo
           
           cd ./repo
           echo "Repository cloned successfully"
