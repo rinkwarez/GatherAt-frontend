@@ -1,5 +1,5 @@
 # ---------- Build stage ----------
-FROM --platform=linux/amd64 node:20-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
