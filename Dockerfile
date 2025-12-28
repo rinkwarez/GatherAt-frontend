@@ -10,6 +10,7 @@ COPY . .
 RUN npm run build -- --configuration production
 
 
+
 # ---------- Runtime stage ----------
 FROM --platform=linux/amd64 nginx:alpine
 
@@ -20,7 +21,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Angular output 
-COPY --from=build /app/dist/browser /usr/share/nginx/html
+COPY --from=build /app/dist/gatherAt/browser /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
