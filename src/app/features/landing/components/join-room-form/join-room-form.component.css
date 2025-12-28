@@ -29,7 +29,7 @@
   padding: 0.875rem 1rem;
   font-size: 0.95rem;
   border: 2px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 12px !important;
   background: white;
   color: var(--color-text);
   transition: all 0.2s ease;
@@ -62,7 +62,7 @@
   color: white;
   background: linear-gradient(135deg, var(--color-accent) 0%, #4fc3f7 100%);
   border: none;
-  border-radius: 12px;
+  border-radius: 12px !important;
   box-shadow: 0 4px 12px rgba(80, 227, 194, 0.3), 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
   display: flex;

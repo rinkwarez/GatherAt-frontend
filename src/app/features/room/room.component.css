@@ -314,6 +314,24 @@
   min-width: 0;
 }
 
+/* Question Display in Content Area */
+.question-display {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.content-question {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
 /* Remove old room-content styles */
 
 /* Options List */

@@ -91,6 +91,11 @@
 
     <!-- Options Section -->
     <div class="room-content">
+      <!-- Question Display -->
+      <div class="question-display">
+        <h2 class="content-question">{{ room()!.question }}</h2>
+      </div>
+
       <!-- Add Option Form -->
       <app-add-option-form
         [roomId]="roomId()"
